@@ -20,15 +20,47 @@ Get-CimInstance -ClassName Win32_Processor -ComputerName . | Select-Object -Excl
 # Processor family
 Get-CimInstance -ClassName Win32_ComputerSystem -ComputerName . | Select-Object -Property SystemType
 
+# Listing Computer Manufacturer and Model
+Get-CimInstance -ClassName Win32_ComputerSystem
+
+# Listing Installed Hotfixes : 	Win32_QuickFixEngineering
+Get-CimInstance -ClassName Win32_QuickFixEngineering -ComputerName .
+# Get-CimInstance -ClassName Win32_QuickFixEngineering -ComputerName . -Property HotFixID
+
+# Listing Operating System Version Information
+Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName . | Select-Object -Property BuildNumber,BuildType,OSType,ServicePackMajorVersion,ServicePackMinorVersion
+Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName . | Select-Object -Property Build*,OSType,ServicePack*
+
+# Listing Local Users and Owner
+Get-CimInstance -ClassName Win32_OperatingSystem -ComputerName . | Select-Object -Property NumberOfLicensedUsers,NumberOfUsers,RegisteredUser
+
+# Getting Available Disk Space
+Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" -ComputerName .
+Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" -ComputerName . | Measure-Object -Property FreeSpace,Size -Sum | Select-Object -Property Property,Sum
+
+# Getting Logon Session Information
+Get-CimInstance -ClassName Win32_LogonSession -ComputerName .
+
+# Getting the User Logged on to a Computer
+Get-CimInstance -ClassName Win32_ComputerSystem -Property UserName -ComputerName .
+
+# Getting Local Time from a Computer
+Get-CimInstance -ClassName Win32_LocalTime -ComputerName .
+
+# Displaying Service Status
+Get-CimInstance -ClassName Win32_Service -ComputerName . | Select-Object -Property Status,Name,DisplayName
+Get-CimInstance -ClassName Win32_Service -ComputerName . | Format-Table -Property Status,Name,DisplayName -AutoSize -Wrap
+
+
 ################################################
 
 # Get-CimInstance Win32_OperatingSystem | Select-Object  Caption | ForEach{ $_.Caption }
 
 # OS Architecture
-# Get-CimInstance Win32_OperatingSystem | Select-Object  OSArchitecture | ForEach{ $_.OSArchitecture }
+Get-CimInstance Win32_OperatingSystem | Select-Object  OSArchitecture | ForEach{ $_.OSArchitecture }
 
 # Boot Device
-# Get-CimInstance Win32_OperatingSystem | Select-Object  BootDevice | ForEach{ $_.BootDevice }
+Get-CimInstance Win32_OperatingSystem | Select-Object  BootDevice | ForEach{ $_.BootDevice }
 
 # Host Name
-# Get-CimInstance Win32_OperatingSystem | Select-Object  CSName | ForEach{ $_.CSName }
+Get-CimInstance Win32_OperatingSystem | Select-Object  CSName | ForEach{ $_.CSName }
